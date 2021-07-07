@@ -24,7 +24,7 @@ There are two possible ways to submit your project. Your instructor should have 
 - [ ] Open the assignment in Canvas and submit your pull request.
 
 ### Task 2: Minimum Viable Product
-
+a
 - Wire the application together completing `api/server.js` and `index.js`.
 - Write four custom middleware functions detailed below, in `api/middleware/middleware.js`.
 - Use the custom middlewares in their appropriate places in the application (specific endpoints, entire routes or globally).
