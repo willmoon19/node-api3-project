@@ -24,12 +24,13 @@ router.get('/:id', validateUserId, (req, res) => {
   res.status(200).json(req.user)
 });
 
-router.post('/', validateUser, (req, res, next) => {
-  Users.insert({ name: req.name })
-  .then(user => {
-    res.status(201).json(user)
-  })
-  .catch(next)
+router.post('/', validateUser, async (req, res, next) => {
+  try {
+  const user = await Users.insert({ name: req.name })
+  res.status(201).json(user)
+  } catch(err) {
+    next(err)
+  }
 });
 
 router.put('/:id', validateUserId, validateUser, (req, res, next) => {
@@ -46,7 +47,7 @@ router.put('/:id', validateUserId, validateUser, (req, res, next) => {
 router.delete('/:id', validateUserId, (req, res, next) => {
   Users.remove(req.params.id)
   .then(thing => { //eslint-disable-line
-    res.status(200).json(`${req.user.name} has been deleted`)
+    res.status(200).json(req.user)
   })
   .catch(next)
 });
@@ -62,7 +63,7 @@ router.get('/:id/posts', validateUserId, async (req, res, next) => {
 
 router.post('/:id/posts', validateUserId, validatePost, async (req, res, next) => {
   try {
-    const newPost = Posts.insert({
+    const newPost = await Posts.insert({
       user_id: req.params.id,
       text: req.text
     })
@@ -75,9 +76,10 @@ router.post('/:id/posts', validateUserId, validatePost, async (req, res, next) =
 router.use((err, req, res, next) => { //eslint-disable-line
   res.status(err.status || 500).json({
     message: "check go bouncy bounce",
-    error: err.message
+    error: err.message,
+    stack: err.stack,
   })
 })
 
 // do not forget to export the router
-module.export = router
+module.exports = router
